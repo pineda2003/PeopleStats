@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra el listado de usuarios con filtros.
      */
     public function index(Request $request)
     {
@@ -35,14 +35,15 @@ class UserController extends Controller
             $query->where('role', $request->get('role'));
         }
 
-        // Ordenar por fecha de creación (más reciente primero)
+        // Ordenar por fecha de creación
         $users = $query->orderBy('created_at', 'desc')->paginate(10);
 
-        return view('admin.users.index', compact('users'));
+        // 👇 Vista corregida
+        return view('admin.admin', compact('users'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Guarda un nuevo usuario.
      */
     public function store(Request $request)
     {
@@ -62,12 +63,11 @@ class UserController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Usuario creado exitosamente');
+        return redirect()->route('admin.admin')->with('success', 'Usuario creado exitosamente');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza un usuario existente.
      */
     public function update(Request $request, User $user)
     {
@@ -86,30 +86,27 @@ class UserController extends Controller
             'status' => $request->status,
         ];
 
-        // Solo actualizar la contraseña si se proporciona
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
         }
 
         $user->update($userData);
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Usuario actualizado exitosamente');
+        return redirect()->route('admin.admin')->with('success', 'Usuario actualizado exitosamente');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina un usuario.
      */
     public function destroy(User $user)
     {
         $user->delete();
 
-        return redirect()->route('admin.users.index')
-                         ->with('success', 'Usuario eliminado exitosamente');
+        return redirect()->route('admin.admin')->with('success', 'Usuario eliminado exitosamente');
     }
 
     /**
-     * Show the specified resource.
+     * Muestra los detalles de un usuario (en JSON).
      */
     public function show(User $user)
     {

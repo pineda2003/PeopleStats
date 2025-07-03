@@ -1,78 +1,71 @@
 
-        // Funcionalidad de búsqueda mejorada
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#usersTable tr');
+        // Funcionalidad del panel de administración
+        document.addEventListener('DOMContentLoaded', function() {
+            // Búsqueda de usuarios
+            const searchInput = document.getElementById('searchInput');
+            const statusFilter = document.getElementById('statusFilter');
+            const roleFilter = document.getElementById('roleFilter');
             
-            rows.forEach(row => {
-                const text = row.textContent.toLowerCase();
-                const isVisible = text.includes(searchTerm);
-                row.style.display = isVisible ? '' : 'none';
-                
-                if (isVisible && searchTerm) {
-                    row.style.background = 'rgba(29, 181, 132, 0.05)';
-                } else {
-                    row.style.background = '';
-                }
-            });
-        });
-
-        // Select all checkbox con animación
-        document.getElementById('selectAll').addEventListener('change', function() {
-            const checkboxes = document.querySelectorAll('.user-checkbox');
-            checkboxes.forEach((checkbox, index) => {
-                setTimeout(() => {
+            // Seleccionar todos los checkboxes
+            const selectAll = document.getElementById('selectAll');
+            const userCheckboxes = document.querySelectorAll('.user-checkbox');
+            
+            selectAll.addEventListener('change', function() {
+                userCheckboxes.forEach(checkbox => {
                     checkbox.checked = this.checked;
-                }, index * 50);
+                });
+            });
+            
+            // Funcionalidad de filtros
+            function filterUsers() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const statusValue = statusFilter.value;
+                const roleValue = roleFilter.value;
+                
+                const rows = document.querySelectorAll('#usersTable tr');
+                
+                rows.forEach(row => {
+                    const name = row.querySelector('.fw-semibold')?.textContent.toLowerCase() || '';
+                    const email = row.cells[2]?.textContent.toLowerCase() || '';
+                    const role = row.querySelector('.badge')?.textContent.toLowerCase() || '';
+                    
+                    const matchesSearch = name.includes(searchTerm) || email.includes(searchTerm);
+                    const matchesStatus = !statusValue || role.includes(statusValue);
+                    const matchesRole = !roleValue || role.includes(roleValue);
+                    
+                    row.style.display = matchesSearch && matchesStatus && matchesRole ? '' : 'none';
+                });
+            }
+            
+            searchInput.addEventListener('input', filterUsers);
+            statusFilter.addEventListener('change', filterUsers);
+            roleFilter.addEventListener('change', filterUsers);
+            
+            // Botones de acción
+            document.querySelectorAll('.btn-view').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Ver detalles del usuario');
+                });
+            });
+            
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Editar usuario');
+                });
+            });
+            
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+                        alert('Usuario eliminado');
+                    }
+                });
+            });
+            
+            // Formulario de agregar usuario
+            document.getElementById('addUserForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Usuario creado exitosamente');
+                document.getElementById('addUserModal').querySelector('.btn-close').click();
             });
         });
-
-        // Filtros mejorados
-        document.getElementById('statusFilter').addEventListener('change', filterTable);
-        document.getElementById('roleFilter').addEventListener('change', filterTable);
-
-        function filterTable() {
-            const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
-            const roleFilter = document.getElementById('roleFilter').value.toLowerCase();
-            const rows = document.querySelectorAll('#usersTable tr');
-            
-            rows.forEach(row => {
-                let showRow = true;
-                const badges = row.querySelectorAll('.badge');
-                
-                if (statusFilter && badges.length > 1) {
-                    const statusText = badges[1].textContent.toLowerCase();
-                    showRow = statusText.includes(statusFilter);
-                }
-                
-                if (roleFilter && showRow && badges.length > 0) {
-                    const roleText = badges[0].textContent.toLowerCase();
-                    showRow = roleText.includes(roleFilter);
-                }
-                
-                row.style.display = showRow ? '' : 'none';
-            });
-        }
-
-    // Formulario con validación mejorada
-    document.getElementById('addUserForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const formData = new FormData(this);
-        const password = formData.get('password');
-        const confirmPassword = formData.get('password_confirmation');
-        
-        if (password !== confirmPassword) {
-            alert('❌ Las contraseñas no coinciden');
-            return;
-        }
-        
-        if (password.length < 6) {
-            alert('❌ La contraseña debe tener al menos 6 caracteres');
-            return;
-        }
-        
-        // Simulación de creación exitosa
-        const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'));
-        modal.hide();
-    });

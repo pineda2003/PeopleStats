@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('dist/css/adminEstilos/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('dist/css/adminEstilos/admin.css') }}">
    
 </head>
 <body>
@@ -62,12 +62,12 @@
                         </div>
                     </div>
                     <hr class="my-3 opacity-25">
-                  
-                    <form action="{{route('logout')}}" method="POST" class="logout-form">
-                    @csrf 
-                   
-                    <button type="submit" class="btn btn-primary"> <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</button>
-                </form>
+                    <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+    </button>
+</form>
                 </div>
             </div>
 
@@ -90,8 +90,6 @@
                             </button>
                         </div>
                     </div>
-
-                    
 
                     <!-- Filters and Search -->
                     <div class="table-container">
@@ -124,120 +122,63 @@
                             </div>
                         </div>
 
-                        <!-- Users Table -->
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead style="background: linear-gradient(135deg, #F8F9FA 0%, #E9ECEF 100%);">
-                                    <tr>
-                                        <th class="border-0 py-3">
-                                            <input type="checkbox" class="form-check-input" id="selectAll">
-                                        </th>
-                                        <th class="border-0 py-3 fw-semibold">Usuario</th>
-                                        <th class="border-0 py-3 fw-semibold">Email</th>
-                                        <th class="border-0 py-3 fw-semibold">Rol</th>
-                                        <th class="border-0 py-3 fw-semibold">Registro</th>
-                                        <th class="border-0 py-3 fw-semibold">Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTable">
-                                    <tr class="border-0">
-                                        <td class="py-3">
-                                            <input type="checkbox" class="form-check-input user-checkbox">
-                                        </td>
-                                        <td class="py-3">
-                                            <div class="d-flex align-items-center">
-                                             
-                                                <div>
-                                                    <div class="fw-semibold">Juan Díaz</div>
-                                                    <small class="text-muted">ID: 1</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">juan.diaz@ejemplo.com</td>
-                                        <td class="py-3"><span class="badge" style="background: var(--primary-green);">🛡️ Admin</span></td>
-                                        <td class="py-3">15/03/2024</td>
-                                       
-                                          
-                                        </td>
-                                        <td class="py-3">
-                                            <button class="action-btn btn-view" title="Ver detalles">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="action-btn btn-edit" title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="action-btn btn-delete" title="Eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-0">
-                                        <td class="py-3">
-                                            <input type="checkbox" class="form-check-input user-checkbox">
-                                        </td>
-                                        <td class="py-3">
-                                            <div class="d-flex align-items-center">
-                                               
-                                                <div>
-                                                    <div class="fw-semibold">María García</div>
-                                                    <small class="text-muted">ID: 2</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">maria.garcia@ejemplo.com</td>
-                                        <td class="py-3"><span class="badge bg-secondary">👤 Usuario</span></td>
-                                   
-                                        <td class="py-3">12/03/2024</td>
-                                   
-                                      
-                                        </td>
-                                        <td class="py-3">
-                                            <button class="action-btn btn-view" title="Ver detalles">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="action-btn btn-edit" title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="action-btn btn-delete" title="Eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="border-0">
-                                        <td class="py-3">
-                                            <input type="checkbox" class="form-check-input user-checkbox">
-                                        </td>
-                                        <td class="py-3">
-                                            <div class="d-flex align-items-center">
-                                                
-                                                <div>
-                                                    <div class="fw-semibold">Carlos López</div>
-                                                    <small class="text-muted">ID: 3</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">carlos.lopez@ejemplo.com</td>
-                                        <td class="py-3"><span class="badge bg-info">⚖️ Moderador</span></td>
-                                    
-                                        <td class="py-3">10/03/2024</td>
-                                       
-                                       
-                                        </td>
-                                        <td class="py-3">
-                                            <button class="action-btn btn-view" title="Ver detalles">
-                                                <i class="bi bi-eye"></i>
-                                            </button>
-                                            <button class="action-btn btn-edit" title="Editar">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="action-btn btn-delete" title="Eliminar">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                     <!-- Users Table -->
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th width="50">
+                    <input type="checkbox" class="form-check-input" id="selectAll">
+                </th>
+                <th>Usuario</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Fecha de Registro</th>
+                <th width="150">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="usersTable">
+            @foreach($users as $user)
+            <tr class="border-0">
+                <td class="py-3">
+                    <input type="checkbox" class="form-check-input user-checkbox">
+                </td>
+                <td class="py-3">
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar me-3">
+                            <i class="bi bi-person"></i>
                         </div>
+                        <div>
+                            <div class="fw-semibold">{{ $user->name }}</div>
+                            <small class="text-muted">ID: {{ $user->id }}</small>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-3">{{ $user->email }}</td>
+                <td class="py-3">
+                    @if($user->role === 'admin')
+                        <span class="badge" style="background: var(--primary-green);">🛡️ Admin</span>
+                    @elseif($user->role === 'moderator')
+                        <span class="badge bg-info">⚖️ Moderador</span>
+                    @else
+                        <span class="badge bg-secondary">👤 Usuario</span>
+                    @endif
+                </td>
+                <td class="py-3">{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
+                <td class="py-3">
+                   
+                    <button class="action-btn btn-edit" title="Editar">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="action-btn btn-delete" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
                         <!-- Pagination -->
                         <div class="p-4 border-top">
@@ -361,5 +302,7 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+     <script src="{{ asset('dist/js/adminJs/admin.js') }}"></script>
     
-      <script src="{{ asset('dist/js/adminJs/admin.js') }}"></script>
+</body>
+</html>
