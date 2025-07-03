@@ -23,7 +23,7 @@
                         </div>
                         <div>
                             <h4 class="mb-0">Admin Panel</h4>
-                            <small class="text-muted">Control Total</small>
+                            <small class="mb-0">Control Total</small>
                         </div>
                     </div>
                     
@@ -44,7 +44,7 @@
                             <i class="bi bi-graph-up me-2"></i>
                             Reportes
                         </a>
-                        <a class="nav-link text-white sidebar-link p-3" href="#analytics">
+                        <a class="nav-link text-white sidebar-link p-3" href="{{ route('analytics') }}">
                             <i class="bi bi-bar-chart me-2"></i>
                             Analytics
                         </a>

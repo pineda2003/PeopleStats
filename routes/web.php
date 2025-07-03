@@ -17,6 +17,9 @@ Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [UserController::class, 'index'])->name('admin');
+  Route::get('/analytics', function () {
+    return view('analytics.analytics');
+})->name('analytics');
     
 });
 
