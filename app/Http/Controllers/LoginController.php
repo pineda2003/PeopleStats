@@ -16,9 +16,9 @@ class LoginController extends Controller
      */
     public function index()
     {
-        // Si el usuario ya está autenticado, redirigir a la página privada
+        // Si el usuario ya está autenticado, redirigir a la página admin
         if (Auth::check()) {
-            return redirect()->route('privada');
+            return redirect()->route('admin');
         }
         
         return view('auth.login');
@@ -67,7 +67,7 @@ class LoginController extends Controller
             // Regenerar la sesión
             $request->session()->regenerate();
 
-            return redirect()->route('privada')->with('success', '¡Registro exitoso! Bienvenido ' . $user->name);
+            return redirect()->route('admin')->with('success', '¡Registro exitoso! Bienvenido ' . $user->name);
 
         } catch (ValidationException $e) {
             // Regresar con errores de validación
@@ -127,8 +127,8 @@ class LoginController extends Controller
                     'ip' => $request->ip()
                 ]);
 
-                // Redirigir a la página privada
-                return redirect()->intended(route('privada'))->with('success', '¡Bienvenido de nuevo, ' . Auth::user()->name . '!');
+                // Redirigir a la página admin
+                return redirect()->intended(route('admin'))->with('success', '¡Bienvenido de nuevo, ' . Auth::user()->name . '!');
             }
 
             // Si las credenciales son incorrectas
@@ -183,17 +183,44 @@ class LoginController extends Controller
     }
 
     /**
-     * Mostrar la página privada
+     * Mostrar la página de administración
      */
-    public function privada()
+    public function admin()
     {
         // Esta verificación es redundante si usas middleware, pero es buena práctica
         if (!Auth::check()) {
-            return redirect()->route('auth.login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
         }
 
         $user = Auth::user();
-        return view('privada', compact('user'));
+        return view('admin.admin', compact('user'));
+    }
+
+    /**
+     * Mostrar la lista de usuarios
+     */
+    public function users()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
+        }
+
+        $users = User::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * Mostrar el dashboard
+     */
+    public function dashboard()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para acceder a esta página.');
+        }
+
+        $user = Auth::user();
+        $totalUsers = User::count();
+        return view('admin.dashboard', compact('user', 'totalUsers'));
     }
 
     /**

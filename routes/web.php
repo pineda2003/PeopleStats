@@ -24,12 +24,13 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check-email');
 
 // Rutas protegidas por autenticación
-Route::middleware(['auth'])->group(function () {
-    Route::get('/privada', [LoginController::class, 'privada'])->name('privada');
+Route::middleware('auth')->group(function () {
+    // Ruta admin principal
+    Route::get('/admin', [LoginController::class, 'admin'])->name('admin');
     
-    
-
-   
+    // Rutas adicionales de admin
+    Route::get('/admin/users', [LoginController::class, 'users'])->name('admin.users.index');
+    Route::get('/admin/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
 });
 
 // Ruta para manejar usuarios no autenticados que intentan acceder a rutas protegidas
