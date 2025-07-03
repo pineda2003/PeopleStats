@@ -91,45 +91,7 @@
                         </div>
                     </div>
 
-                    <!-- Stats Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3 mb-3">
-                            <div class="card stats-card">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-people fs-1 mb-3" style="color: var(--primary-green);"></i>
-                                    <h3 class="mb-1">1,234</h3>
-                                    <small class="text-muted">Total Usuarios</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card stats-card">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-person-check fs-1 mb-3" style="color: var(--primary-green);"></i>
-                                    <h3 class="mb-1">956</h3>
-                                    <small class="text-muted">Usuarios Activos</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card stats-card">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-person-plus fs-1 mb-3" style="color: var(--primary-green);"></i>
-                                    <h3 class="mb-1">42</h3>
-                                    <small class="text-muted">Nuevos Hoy</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="card stats-card">
-                                <div class="card-body text-center p-4">
-                                    <i class="bi bi-person-x fs-1 mb-3" style="color: #E74C3C;"></i>
-                                    <h3 class="mb-1">15</h3>
-                                    <small class="text-muted">Inactivos</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <!-- Filters and Search -->
                     <div class="table-container">
@@ -173,9 +135,7 @@
                                         <th class="border-0 py-3 fw-semibold">Usuario</th>
                                         <th class="border-0 py-3 fw-semibold">Email</th>
                                         <th class="border-0 py-3 fw-semibold">Rol</th>
-                                        <th class="border-0 py-3 fw-semibold">Estado</th>
                                         <th class="border-0 py-3 fw-semibold">Registro</th>
-                                        <th class="border-0 py-3 fw-semibold">Último Acceso</th>
                                         <th class="border-0 py-3 fw-semibold">Acciones</th>
                                     </tr>
                                 </thead>
@@ -186,7 +146,7 @@
                                         </td>
                                         <td class="py-3">
                                             <div class="d-flex align-items-center">
-                                                <div class="user-avatar me-3">JD</div>
+                                             
                                                 <div>
                                                     <div class="fw-semibold">Juan Díaz</div>
                                                     <small class="text-muted">ID: 1</small>
@@ -195,10 +155,9 @@
                                         </td>
                                         <td class="py-3">juan.diaz@ejemplo.com</td>
                                         <td class="py-3"><span class="badge" style="background: var(--primary-green);">🛡️ Admin</span></td>
-                                        <td class="py-3"><span class="badge bg-success">✅ Activo</span></td>
                                         <td class="py-3">15/03/2024</td>
-                                        <td class="py-3">
-                                            <span class="badge bg-light text-dark">🟢 Hace 2 horas</span>
+                                       
+                                          
                                         </td>
                                         <td class="py-3">
                                             <button class="action-btn btn-view" title="Ver detalles">
@@ -218,7 +177,7 @@
                                         </td>
                                         <td class="py-3">
                                             <div class="d-flex align-items-center">
-                                                <div class="user-avatar me-3">MG</div>
+                                               
                                                 <div>
                                                     <div class="fw-semibold">María García</div>
                                                     <small class="text-muted">ID: 2</small>
@@ -227,10 +186,10 @@
                                         </td>
                                         <td class="py-3">maria.garcia@ejemplo.com</td>
                                         <td class="py-3"><span class="badge bg-secondary">👤 Usuario</span></td>
-                                        <td class="py-3"><span class="badge bg-success">✅ Activo</span></td>
+                                   
                                         <td class="py-3">12/03/2024</td>
-                                        <td class="py-3">
-                                            <span class="badge bg-light text-dark">🟡 Ayer</span>
+                                   
+                                      
                                         </td>
                                         <td class="py-3">
                                             <button class="action-btn btn-view" title="Ver detalles">
@@ -250,7 +209,7 @@
                                         </td>
                                         <td class="py-3">
                                             <div class="d-flex align-items-center">
-                                                <div class="user-avatar me-3">CL</div>
+                                                
                                                 <div>
                                                     <div class="fw-semibold">Carlos López</div>
                                                     <small class="text-muted">ID: 3</small>
@@ -259,10 +218,10 @@
                                         </td>
                                         <td class="py-3">carlos.lopez@ejemplo.com</td>
                                         <td class="py-3"><span class="badge bg-info">⚖️ Moderador</span></td>
-                                        <td class="py-3"><span class="badge bg-warning">⏳ Pendiente</span></td>
+                                    
                                         <td class="py-3">10/03/2024</td>
-                                        <td class="py-3">
-                                            <span class="badge bg-light text-dark">🔴 Hace 3 días</span>
+                                       
+                                       
                                         </td>
                                         <td class="py-3">
                                             <button class="action-btn btn-view" title="Ver detalles">
