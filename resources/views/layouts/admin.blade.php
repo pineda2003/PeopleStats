@@ -21,7 +21,19 @@
             {{-- Contenido principal --}}
             <div class="col-md-9 col-lg-10 main-content">
                 <div class="p-4">
+                    <div class="admin-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h2 class="mb-1">
+                                    @yield('tituloPage', 'Titulo de pagina')
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                    
                     @yield('contenido')
+                
+
                 </div>
             </div>
         </div>
@@ -30,5 +42,6 @@
     {{-- Scripts --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('dist/js/adminJs/admin.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>

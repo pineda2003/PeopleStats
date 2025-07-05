@@ -39,7 +39,7 @@
             </div>
             <div>
                 <div class="fw-semibold">Administrador</div>
-                <small class="text-muted">admin@sistema.com</small>
+                <small class="mb-0 text-white">admi</small>  
             </div>
         </div>
         <hr class="my-3 opacity-25">

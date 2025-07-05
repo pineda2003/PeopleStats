@@ -27,15 +27,16 @@
                         </div>
                     </div>
                     
-                    <nav class="nav flex-column">
-                        <a class="nav-link text-white sidebar-link p-3" href="#dashboard">
-                            <i class="bi bi-speedometer2 me-2"></i>
-                            Dashboard
-                        </a>
+                    <nav class="nav flex-column"> 
                         <a class="nav-link text-white sidebar-link p-3 active" href="#users">
                             <i class="bi bi-people me-2"></i>
                             Usuarios
                         </a>
+                        <a class="nav-link text-white sidebar-link p-3" href="#dashboard">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            Dashboard
+                        </a>
+                       
                         <a class="nav-link text-white sidebar-link p-3" href="#settings">
                             <i class="bi bi-gear me-2"></i>
                             Configuración

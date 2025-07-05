@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('tituloPage', 'Gestión de Usuarios')
+@section('tituloPage', 'hola mundo ')
 
 @section('contenido')
     
