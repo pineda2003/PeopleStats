@@ -15,12 +15,29 @@ Route::post('/validar-registro', [LoginController::class, 'registro'])->name('va
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check-email');
 
-Route::middleware('auth')->group(function () {
+// Rutas protegidas por autenticación y rol
+Route::middleware(['auth', 'role:1'])->group(function () {
+    // Solo usuarios con rol 1 (admin) pueden acceder
     Route::get('/admin', [UserController::class, 'index'])->name('admin');
-  Route::get('/analytics', function () {
-    return view('analytics.analytics');
-})->name('analytics');
     
+    // CRUD de usuarios (solo admin)
+    Route::post('/admin/users', [UserController::class, 'store'])->name('admin.users.store');
+    Route::put('/admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+    Route::delete('/admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+    Route::get('/admin/users/{user}', [UserController::class, 'show'])->name('admin.users.show');
+    
+    Route::get('/analytics', function () {
+        return view('analytics.analytics');
+    })->name('analytics');
+});
+Route::middleware(['auth', 'role:2'])->group(function () {
+    Route::get('/home', [UserController::class, 'home'])->name('home');
+});
+Route::middleware(['auth', 'role:3'])->group(function () {
+    Route::get('/homeConcejal', [UserController::class, 'homeConcejal'])->name('homeConcejal');
+});
+Route::middleware(['auth', 'role:4'])->group(function () {
+    Route::get('/homeLider', [UserController::class, 'homeLider'])->name('homeLider');
 });
 
 Route::fallback(function () {

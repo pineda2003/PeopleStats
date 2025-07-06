@@ -16,9 +16,9 @@ class LoginController extends Controller
      */
     public function index()
     {
-        // Si el usuario ya está autenticado, redirigir a la página admin
+        // Si el usuario ya está autenticado, redirigir según su rol
         if (Auth::check()) {
-            return redirect()->route('admin');
+            return $this->redirectBasedOnRole(Auth::user());
         }
         
         return view('auth.login');
@@ -35,6 +35,7 @@ class LoginController extends Controller
                 'name' => 'required|string|max:255|min:2',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
+                'rol_id' => 'required|in:1,2,3', // Validar que el rol sea válido
             ], [
                 'name.required' => 'El nombre es obligatorio.',
                 'name.min' => 'El nombre debe tener al menos 2 caracteres.',
@@ -45,6 +46,8 @@ class LoginController extends Controller
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
                 'password.confirmed' => 'Las contraseñas no coinciden.',
+                'rol_id.required' => 'El rol es obligatorio.',
+                'rol_id.in' => 'El rol seleccionado no es válido.',
             ]);
 
             // Crear el nuevo usuario
@@ -52,12 +55,14 @@ class LoginController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
+            $user->rol_id = $request->rol_id; // Asignar el rol
             $user->save();
 
             // Log del registro exitoso
             Log::info('Nuevo usuario registrado', [
                 'user_id' => $user->id,
                 'email' => $user->email,
+                'rol_id' => $user->rol_id,
                 'ip' => $request->ip()
             ]);
 
@@ -67,7 +72,8 @@ class LoginController extends Controller
             // Regenerar la sesión
             $request->session()->regenerate();
 
-            return redirect()->route('admin')->with('success', '¡Registro exitoso! Bienvenido ' . $user->name);
+            // Redirigir según el rol del usuario
+            return $this->redirectBasedOnRole($user)->with('success', '¡Registro exitoso! Bienvenido ' . $user->name);
 
         } catch (ValidationException $e) {
             // Regresar con errores de validación
@@ -116,19 +122,20 @@ class LoginController extends Controller
             }
 
             // Intentar autenticar al usuario
-            if (Auth::attempt($credentials, $request->filled('remember'))) {
-                // Regenerar la sesión para prevenir ataques de fijación de sesión
-                $request->session()->regenerate();
-
-                // Log del login exitoso
-                Log::info('Usuario autenticado exitosamente', [
-                    'user_id' => Auth::id(),
-                    'email' => Auth::user()->email,
-                    'ip' => $request->ip()
-                ]);
-
-                // Redirigir a la página admin
-                return redirect()->intended(route('admin'))->with('success', '¡Bienvenido de nuevo, ' . Auth::user()->name . '!');
+            if (Auth::attempt($credentials)) {
+                $user = Auth::user();
+                if ($user->rol_id == 1) {
+                    return redirect()->route('admin');
+                } elseif ($user->rol_id == 2) {
+                    return redirect()->route('home');
+                }elseif ($user->rol_id == 2) {
+                    return redirect()->route('home');
+                } elseif ($user->rol_id == 3) {
+                    return redirect()->route('homeConcejal');
+                } elseif ($user->rol_id == 4) {
+                    return redirect()->route('homeLider');
+                }
+                // Otros roles si los tienes
             }
 
             // Si las credenciales son incorrectas
@@ -152,6 +159,27 @@ class LoginController extends Controller
             ]);
 
             return back()->with('error', 'Ocurrió un error durante el login. Por favor, inténtalo de nuevo.')->withInput($request->only('email'));
+        }
+    }
+
+    /**
+     * Redirigir según el rol del usuario
+     */
+    private function redirectBasedOnRole($user)
+    {
+        switch ($user->rol_id) {
+            case 1:
+                return redirect()->route('admin');
+            case 2:
+                return redirect()->route('home');
+            case 3:
+                return redirect()->route('homeConcejal');
+            case 4:
+                return redirect()->route('homeLider');
+            default:
+                // Si el rol no es válido, cerrar sesión y redirigir al login
+                Auth::logout();
+                return redirect()->route('login')->with('error', 'Rol de usuario no válido. Contacta al administrador.');
         }
     }
 

@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\RoleRedirect;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -11,9 +13,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // En Laravel 12, usa esta sintaxis
+        // Registrar middleware con alias
         $middleware->alias([
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+            'role' => CheckRole::class,
+            'role.redirect' => RoleRedirect::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
