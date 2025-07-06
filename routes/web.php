@@ -15,9 +15,10 @@ Route::post('/validar-registro', [LoginController::class, 'registro'])->name('va
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('/check-email', [LoginController::class, 'checkEmail'])->name('check-email');
 
-// Rutas protegidas por autenticación y rol
-Route::middleware(['auth', 'role:1'])->group(function () {
-    // Solo usuarios con rol 1 (admin) pueden acceder
+// Rutas protegidas por autenticación y rol (CAMBIO IMPORTANTE)
+// Cambié 'role:1' por 'role:Super Admin' etc.
+Route::middleware(['auth', 'role:Super Admin'])->group(function () {
+    // Solo usuarios con rol "Super Admin" pueden acceder
     Route::get('/admin', [UserController::class, 'index'])->name('admin');
     
     // CRUD de usuarios (solo admin)
@@ -30,13 +31,16 @@ Route::middleware(['auth', 'role:1'])->group(function () {
         return view('analytics.analytics');
     })->name('analytics');
 });
-Route::middleware(['auth', 'role:2'])->group(function () {
+
+Route::middleware(['auth', 'role:Candidato Alcalde'])->group(function () {
     Route::get('/home', [UserController::class, 'home'])->name('home');
 });
-Route::middleware(['auth', 'role:3'])->group(function () {
+
+Route::middleware(['auth', 'role:Candidato Concejal'])->group(function () {
     Route::get('/homeConcejal', [UserController::class, 'homeConcejal'])->name('homeConcejal');
 });
-Route::middleware(['auth', 'role:4'])->group(function () {
+
+Route::middleware(['auth', 'role:Líder Comunitario'])->group(function () {
     Route::get('/homeLider', [UserController::class, 'homeLider'])->name('homeLider');
 });
 

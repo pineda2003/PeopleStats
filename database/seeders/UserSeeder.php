@@ -10,31 +10,23 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $usuarios = [
-            [
-                'name' => 'Super Administrador',
-                'email' => 'luisguillermo@gmail.com',
-                'password' => bcrypt('123456789'),
-                'rol_id' => 1,
-            ],
-            
-            
-        ];
+     $usuarios = [
+    [
+        'name' => 'Super Administrador',
+        'email' => 'luisguillermo@gmail.com',
+        'password' => bcrypt('123456789'),
+        'rol' => 'super-admin',
+    ],
+];
 
         foreach ($usuarios as $data) {
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => $data['password'],
-                'rol_id' => $data['rol_id'], // este campo sigue existiendo en la tabla
-            ]);
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => $data['password'],
+    ]);
 
-            if ($data['rol_id']) {
-                $rol = Role::find($data['rol_id']);
-                if ($rol) {
-                    $user->assignRole($rol->name); // Asignar por nombre
-                }
-            }
-        }
+    $user->assignRole($data['rol']);
+}
     }
 }

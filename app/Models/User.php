@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
- use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -20,11 +20,9 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'rol_id',
         'email',
         'password',
-        
-      
+        // 'rol_id' ELIMINADO - Ya no se usa
     ];
 
     /**
@@ -53,5 +51,13 @@ class User extends Authenticatable
     /**
      * Get user initials for avatar
      */
- 
+    public function getInitialsAttribute()
+    {
+        $names = explode(' ', $this->name);
+        $initials = '';
+        foreach ($names as $name) {
+            $initials .= strtoupper(substr($name, 0, 1));
+        }
+        return $initials;
+    }
 }

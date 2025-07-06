@@ -4,7 +4,7 @@
 
 @section('contenido')
 
-{{-- Mostrar mensajes de éxito o error --}}
+{{-- Mensajes --}}
 @if(session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
@@ -34,12 +34,11 @@
 <!-- Botón Nuevo Usuario -->
 <div class="mb-3 text-end">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-        <i class="bi bi-plus-circle me-2"></i>
-        Nuevo Usuario
+        <i class="bi bi-plus-circle me-2"></i>Nuevo Usuario
     </button>
 </div>
 
-<!-- Filtros y Búsqueda -->
+<!-- Filtros -->
 <div class="p-4 border bg-light rounded mb-4">
     <form method="GET" action="{{ route('admin') }}">
         <div class="row align-items-center g-3">
@@ -48,17 +47,18 @@
                     <span class="input-group-text bg-white border-0">
                         <i class="bi bi-search text-muted"></i>
                     </span>
-                    <input type="text" class="form-control border-start-0" placeholder="Buscar usuarios por nombre o email..." 
+                    <input type="text" class="form-control border-start-0" placeholder="Buscar usuarios..." 
                            name="search" value="{{ request('search') }}">
                 </div>
             </div>
             <div class="col-md-2">
                 <select class="form-select" name="role">
                     <option value="">👥 Todos los roles</option>
-                    <option value="1" {{ request('role') == '1' ? 'selected' : '' }}>🛡️ Super Admin</option>
-                    <option value="2" {{ request('role') == '2' ? 'selected' : '' }}>👨‍💼 Candidato Alcalde</option>
-                    <option value="3" {{ request('role') == '3' ? 'selected' : '' }}>👤 Candidato Concejal</option>
-                    <option value="4" {{ request('role') == '4' ? 'selected' : '' }}>👤 Líder Comunitario</option>
+                    @foreach(\Spatie\Permission\Models\Role::all() as $rol)
+                        <option value="{{ $rol->name }}" {{ request('role') == $rol->name ? 'selected' : '' }}>
+                            {{ $rol->name }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-md-1">
@@ -70,7 +70,7 @@
     </form>
 </div>
 
-<!-- Tabla de Usuarios -->
+<!-- Tabla de usuarios -->
 <div class="table-responsive">
     <table class="table">
         <thead>
@@ -79,7 +79,6 @@
                 <th>Usuario</th>
                 <th>Email</th>
                 <th>Rol</th>
-             
                 <th>Fecha de Registro</th>
                 <th width="150">Acciones</th>
             </tr>
@@ -99,19 +98,22 @@
                 </td>
                 <td>{{ $user->email }}</td>
                 <td>
-                    @if($user->rol_id == 1)
+                    @php
+                        $rol = $user->getRoleNames()->first();
+                    @endphp
+
+                    @if($rol == 'Super Admin')
                         <span class="badge bg-success">🛡️ Super Admin</span>
-                    @elseif($user->rol_id == 2)
+                    @elseif($rol == 'Candidato Alcalde')
                         <span class="badge bg-primary">👨‍💼 Candidato Alcalde</span>
-                    @elseif($user->rol_id == 3)
+                    @elseif($rol == 'Candidato Concejal')
                         <span class="badge bg-info">👤 Candidato Concejal</span>
-                    @elseif($user->rol_id == 4)
-                        <span class="badge bg-warning">👤 Líder Comunitario</span>
+                    @elseif($rol == 'Líder Comunitario')
+                        <span class="badge bg-warning text-dark">👤 Líder Comunitario</span>
                     @else
                         <span class="badge bg-secondary">👤 Usuario</span>
                     @endif
                 </td>
-               
                 <td>{{ \Carbon\Carbon::parse($user->created_at)->format('d/m/Y') }}</td>
                 <td>
                     <button class="btn btn-sm btn-outline-primary me-1" title="Editar" 
@@ -143,41 +145,37 @@
                             <div class="modal-body p-4">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold"><i class="bi bi-person me-1"></i>Nombre Completo</label>
+                                        <label class="form-label fw-semibold">Nombre</label>
                                         <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold"><i class="bi bi-envelope me-1"></i>Email</label>
+                                        <label class="form-label fw-semibold">Email</label>
                                         <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold"><i class="bi bi-lock me-1"></i>Nueva Contraseña</label>
-                                        <input type="password" class="form-control" name="password" placeholder="Dejar vacío para mantener actual">
+                                        <label class="form-label fw-semibold">Nueva Contraseña</label>
+                                        <input type="password" class="form-control" name="password" placeholder="Dejar vacío para mantener">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold"><i class="bi bi-lock-fill me-1"></i>Confirmar Contraseña</label>
-                                        <input type="password" class="form-control" name="password_confirmation" placeholder="Confirmar nueva contraseña">
+                                        <label class="form-label fw-semibold">Confirmar Contraseña</label>
+                                        <input type="password" class="form-control" name="password_confirmation">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-semibold"><i class="bi bi-shield me-1"></i>Rol</label>
+                                        <label class="form-label fw-semibold">Rol</label>
                                         <select class="form-select" name="role" required>
                                             <option value="">Seleccionar rol</option>
-                                            <option value="1" {{ $user->rol_id == 1 ? 'selected' : '' }}>🛡️ Super Administrador</option>
-                                            <option value="2" {{ $user->rol_id == 2 ? 'selected' : '' }}>👨‍💼 Candidato Alcalde</option>
-                                            <option value="3" {{ $user->rol_id == 3 ? 'selected' : '' }}>👤 Candidato Concejal</option>
-                                            <option value="4" {{ $user->rol_id == 4 ? 'selected' : '' }}>👤 Líder Comunitario</option>
+                                            @foreach(\Spatie\Permission\Models\Role::all() as $rol)
+                                                <option value="{{ $rol->name }}" {{ $user->hasRole($rol->name) ? 'selected' : '' }}>
+                                                    {{ $rol->name }}
+                                                </option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                    
                                 </div>
                             </div>
                             <div class="modal-footer p-4">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <i class="bi bi-x-circle me-2"></i>Cancelar
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bi bi-check-circle me-2"></i>Actualizar Usuario
-                                </button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Actualizar</button>
                             </div>
                         </form>
                     </div>
@@ -216,41 +214,37 @@
                 <div class="modal-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold"><i class="bi bi-person me-1"></i>Nombre Completo</label>
+                            <label class="form-label fw-semibold">Nombre</label>
                             <input type="text" class="form-control" name="name" value="{{ old('name') }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold"><i class="bi bi-envelope me-1"></i>Email</label>
+                            <label class="form-label fw-semibold">Email</label>
                             <input type="email" class="form-control" name="email" value="{{ old('email') }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold"><i class="bi bi-lock me-1"></i>Contraseña</label>
+                            <label class="form-label fw-semibold">Contraseña</label>
                             <input type="password" class="form-control" name="password" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold"><i class="bi bi-lock-fill me-1"></i>Confirmar Contraseña</label>
+                            <label class="form-label fw-semibold">Confirmar Contraseña</label>
                             <input type="password" class="form-control" name="password_confirmation" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold"><i class="bi bi-shield me-1"></i>Rol</label>
+                            <label class="form-label fw-semibold">Rol</label>
                             <select class="form-select" name="role" required>
                                 <option value="">Seleccionar rol</option>
-                                
-                                <option value="2" {{ old('role') == '2' ? 'selected' : '' }}>👨‍💼 Candidato Alcalde</option>
-                                <option value="3" {{ old('role') == '3' ? 'selected' : '' }}>👤 Candidato Concejal</option>
-                                <option value="4" {{ old('role') == '4' ? 'selected' : '' }}>👤 Líder Comunitario</option>
+                                @foreach(\Spatie\Permission\Models\Role::all() as $rol)
+                                    <option value="{{ $rol->name }}" {{ old('role') == $rol->name ? 'selected' : '' }}>
+                                        {{ $rol->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
-                       
                     </div>
                 </div>
                 <div class="modal-footer p-4">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="bi bi-x-circle me-2"></i>Cancelar
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-2"></i>Crear Usuario
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Crear Usuario</button>
                 </div>
             </form>
         </div>

@@ -31,15 +31,18 @@ class UserController extends Controller
             $query->where('status', $request->get('status'));
         }
 
-        // Filtro por rol usando rol_id
+        // Filtro por rol usando Spatie (CAMBIO IMPORTANTE)
         if ($request->filled('role')) {
-            $query->where('rol_id', $request->get('role'));
+            $query->role($request->get('role')); // Método de Spatie
         }
 
         // Ordenar por fecha de creación
         $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Obtener todos los roles para el filtro
+        $roles = Role::all();
 
-        return view('admin.admin', compact('users'));
+        return view('admin.admin', compact('users', 'roles'));
     }
 
     /**
@@ -52,23 +55,18 @@ class UserController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8|confirmed',
-                'role' => 'required|integer|exists:roles,id', // Validar que el rol existe
-        
+                'role' => 'required|string|exists:roles,name', // CAMBIO: usar name en lugar de id
             ]);
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'rol_id' => $request->role, // Usar rol_id
-                
+                // 'rol_id' ELIMINADO - Ya no se usa
             ]);
 
-            // Asignar rol usando Spatie
-            $rol = Role::find($request->role);
-            if ($rol) {
-                $user->assignRole($rol->name);
-            }
+            // Asignar rol usando Spatie (SIMPLIFICADO)
+            $user->assignRole($request->role);
 
             return redirect()->route('admin')->with('success', 'Usuario creado exitosamente');
 
@@ -88,14 +86,14 @@ class UserController extends Controller
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-                'role' => 'required|integer|exists:roles,id',
+                'role' => 'required|string|exists:roles,name', // CAMBIO: usar name
                 'password' => 'nullable|string|min:8|confirmed',
             ]);
 
             $userData = [
                 'name' => $request->name,
                 'email' => $request->email,
-                'rol_id' => $request->role,
+                // 'rol_id' ELIMINADO
             ];
 
             if ($request->filled('password')) {
@@ -104,12 +102,8 @@ class UserController extends Controller
 
             $user->update($userData);
 
-            // Actualizar rol
-            $user->syncRoles([]); // Quitar roles actuales
-            $rol = Role::find($request->role);
-            if ($rol) {
-                $user->assignRole($rol->name);
-            }
+            // Actualizar rol (SIMPLIFICADO)
+            $user->syncRoles([$request->role]);
 
             return redirect()->route('admin')->with('success', 'Usuario actualizado exitosamente');
 
